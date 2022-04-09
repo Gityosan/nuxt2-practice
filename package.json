@@ -23,6 +23,7 @@
     "core-js": "^3.19.3",
     "gmap-vue": "^3.5.2",
     "gsap": "^3.10.2",
+    "nodemailer": "^6.7.3",
     "nuxt": "^2.15.8"
   },
   "devDependencies": {
