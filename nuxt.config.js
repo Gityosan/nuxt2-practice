@@ -1,11 +1,13 @@
 import colors from 'vuetify/es5/util/colors'
+import axios from 'axios'
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
+  target: 'server',
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'nuxt_template',
+    title: 'nuxt2-practice',
     htmlAttrs: {
       lang: 'ja'
     },
@@ -22,15 +24,13 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    { src: './plugins/gmap-vue.js', mode: 'client' },
-    { src: './plugins/gsap.js', mode: 'client' }
-  ],
+  plugins: [{ src: './plugins/gmap-vue.js', mode: 'client' }],
 
   publicRuntimeConfig: {
     MICROCMS_API_KEY: process.env.MICROCMS_API_KEY,
     MICROCMS_API_URL: process.env.MICROCMS_API_URL,
-    GOOGLE_MAPS_JS_API_KEY: process.env.GOOGLE_MAPS_JS_API_KEY
+    GOOGLE_MAPS_JS_API_KEY: process.env.GOOGLE_MAPS_JS_API_KEY,
+    GOOGLE_FORM_URL: process.env.GOOGLE_FORM_URL
   },
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -47,10 +47,22 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ['@nuxtjs/axios'],
+
+  proxy: {
+    '/googleform': {
+      target: process.env.GOOGLE_FORM_URL,
+      pathRewrite: { '^/googleform': '' }
+    },
+    '/api': {
+      target: 'http://localhost:3000',
+      pathRewrite: { '^/api': '' }
+    }
+  },
   axios: {
     proxy: true
   },
-  transpile: [/^gmap-vue($|\/)/],
+
+  serverMiddleware: ['~/server/nodemailer.js'],
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
@@ -69,5 +81,28 @@ export default {
     }
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {}
+  build: {
+    transpile: [/^gmap-vue($|\/)/]
+  },
+  generate: {
+    async routes() {
+      const routes = []
+      await axios
+        .get(process.env.MICROCMS_API_URL + '/blog', {
+          headers: { 'X-MICROCMS-API-KEY': process.env.MICROCMS_API_KEY }
+        })
+        .then((res) => {
+          for (let i = 0, len = res.data.contents.length; i < len; i++) {
+            const item = res.data.contents[i]
+            routes.push({
+              route: '/blog/' + item.id,
+              payload: item
+            })
+          }
+        })
+        .catch((e) => {
+          console.log('microCMS/listBlogs/Error', e)
+        })
+    }
+  }
 }

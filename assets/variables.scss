@@ -2,3 +2,16 @@
 //
 // The variables you want to modify
 // $font-size-root: 20px;
+.v-application,
+.v-application .text-h1,
+.v-application .text-h2,
+.v-application .text-h3,
+.v-application .text-h4,
+.v-application .text-h5 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', YuGothic,
+    'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', Arial, 'メイリオ',
+    Meiryo, sans-serif !important;
+}
+a {
+  text-decoration: none;
+}

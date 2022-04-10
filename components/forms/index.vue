@@ -14,6 +14,15 @@
         ></v-text-field>
       </v-card-title>
       <v-card-title>
+        メールアドレス
+        <v-text-field
+          v-model.trim.lazy="mailaddress"
+          dense
+          :rules="[required, max30]"
+          class="px-5"
+        ></v-text-field>
+      </v-card-title>
+      <v-card-title>
         要件
         <v-text-field
           v-model.trim.lazy="subject"
@@ -57,7 +66,7 @@
         color="primary"
         width="-webkit-fill-available"
         class="mx-5"
-        @click="googleFormSubmit()"
+        @click.prevent="googleFormSubmit()"
       >
         <v-icon>mdi-email-fast-outline</v-icon>送信
       </v-btn>
@@ -65,11 +74,10 @@
   </div>
 </template>
 <script>
-// import { createTransport } from 'nodemailer'
-
 export default {
   data: () => ({
     name: '',
+    mailaddress: '',
     subject: '',
     required: (v) => !!v || '必須項目です',
     max30: (v) => (!v ? true : (v && v.length <= 30) || '30文字までです')
@@ -87,43 +95,44 @@ export default {
           { name: this.name, subject: this.subject },
           this.header()
         )
-        .then(() => {
-          alert('送信できました')
+        .then((res) => {
+          if (res.status === 201) {
+            alert('送信できました')
+          }
         })
         .catch((e) => {
           console.log('microCMSSubmit/Error', e)
         })
     },
     async mailSubmit() {
-      // const transporter = createTransport({
-      //   host: 'mail.example.com', // ホスト名
-      //   port: 465,
-      //   secure: true,
-      //   auth: {
-      //     user: 'mail@example.com', // メールアドレス
-      //     pass: '********' // パスワード
-      //   }
-      // })
-      // await transporter
-      //   .sendMail({
-      //     from: `"Shinobi Works" <no-reply@example.com>`,
-      //     to: `administer@example.com`,
-      //     subject: '問い合わせがありました',
-      //     text: `サイトにお問い合わせがありました...（略）`
-      //   })
-      //   .then(() => {
-      //     alert('送信できました')
-      //   })
-      //   .catch((error) => {
-      //     console.log(`メールを送信できませんでした`)
-      //     throw error
-      //   })
+      await this.$axios
+        .post(
+          '/api/mailer?name=' +
+            this.name +
+            '&subject=' +
+            this.subject +
+            '&mailaddress=' +
+            this.mailaddress
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            alert('送信できました')
+          }
+        })
+        .catch((e) => {
+          console.log('mailSubmit/Error', e)
+        })
     },
-    googleFormSubmit() {
-      this.$axios
-        .post(this.$config.MICROCMS_API_URL + '/form', this.header())
-        .then(() => {
-          alert('送信できました')
+    async googleFormSubmit() {
+      const params = new FormData()
+      params.append('entry.1715882031', this.name)
+      params.append('entry.433075776', this.subject)
+      await this.$axios
+        .post('/googleform', params)
+        .then((res) => {
+          if (res.status === 200) {
+            alert('送信できました')
+          }
         })
         .catch((e) => {
           console.log('googleFormSubmit/Error', e)

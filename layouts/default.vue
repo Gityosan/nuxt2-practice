@@ -67,24 +67,26 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-      badge: false,
-      drawer: false,
-      pages: [
-        {
-          title: 'トップ',
-          icon: 'mdi-home',
-          path: '/'
-        },
-        {
-          title: '設定',
-          icon: 'mdi-form-select',
-          path: '/forms'
-        }
-      ]
-    }
-  }
+  data: () => ({
+    drawer: false,
+    pages: [
+      {
+        title: 'トップ',
+        icon: 'mdi-home',
+        path: '/'
+      },
+      {
+        title: 'フォーム',
+        icon: 'mdi-form-select',
+        path: '/forms'
+      },
+      {
+        title: 'ブログ',
+        icon: 'mdi-post-outline',
+        path: '/blog'
+      }
+    ]
+  })
 }
 </script>
 <style lang="scss" scoped>
