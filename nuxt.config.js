@@ -83,26 +83,26 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [/^gmap-vue($|\/)/]
-  },
-  generate: {
-    async routes() {
-      const routes = []
-      await axios
-        .get(process.env.MICROCMS_API_URL + '/blog', {
-          headers: { 'X-MICROCMS-API-KEY': process.env.MICROCMS_API_KEY }
-        })
-        .then((res) => {
-          for (let i = 0, len = res.data.contents.length; i < len; i++) {
-            const item = res.data.contents[i]
-            routes.push({
-              route: '/blog/' + item.id,
-              payload: item
-            })
-          }
-        })
-        .catch((e) => {
-          console.log('microCMS/listBlogs/Error', e)
-        })
-    }
   }
+  // generate: {
+  //   async routes() {
+  //     const routes = []
+  //     await axios
+  //       .get(process.env.MICROCMS_API_URL + '/blog', {
+  //         headers: { 'X-MICROCMS-API-KEY': process.env.MICROCMS_API_KEY }
+  //       })
+  //       .then((res) => {
+  //         for (let i = 0, len = res.data.contents.length; i < len; i++) {
+  //           const item = res.data.contents[i]
+  //           routes.push({
+  //             route: '/blog/' + item.id,
+  //             payload: item
+  //           })
+  //         }
+  //       })
+  //       .catch((e) => {
+  //         console.log('microCMS/listBlogs/Error', e)
+  //       })
+  //   }
+  // }
 }
