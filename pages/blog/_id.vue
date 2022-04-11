@@ -94,10 +94,7 @@ export default {
 }
 @media (min-width: 960px) {
   .frame {
-    display: flex;
-    justify-content: space-between;
     width: 904px;
-    margin: 20px auto 0;
   }
 }
 </style>
