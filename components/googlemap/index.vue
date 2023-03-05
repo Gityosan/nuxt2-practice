@@ -13,7 +13,7 @@
     >
       <GmapMarker
         ref="gmarker"
-        title="あなたの医院"
+        title="マーカー"
         :position="{ lat: markerLat, lng: markerLng }"
         :clickable="false"
         :draggable="true"
