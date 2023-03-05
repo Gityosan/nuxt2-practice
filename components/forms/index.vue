@@ -53,6 +53,7 @@
         color="primary"
         width="-webkit-fill-available"
         class="mx-5"
+        :disabled="true"
         @click="mailSubmit()"
       >
         <v-icon>mdi-email-fast-outline</v-icon>送信
